@@ -23,6 +23,8 @@ It highlights components directly on the page and lets you **copy or export** al
 
 4. In the **URL** field, paste the following code:
 
+v1
+
    ```javascript
    javascript:(function(){
      const url='https://raw.githubusercontent.com/nelsonadpa/eRegistrationsBookmarklet/main/formio-keys.js';
@@ -33,11 +35,22 @@ It highlights components directly on the page and lets you **copy or export** al
    })();
    ```
 
-5. Save the bookmark.
+v2
+   ```javascript
+   javascript:(function(){
+     const url='https://raw.githubusercontent.com/nelsonadpa/eRegistrationsBookmarklet/main/formio-keys.js](https://github.com/nelsonadpa/eRegistrationsBookmarklet/blob/main/formio-keys-enhanced.js';
+     fetch(url)
+       .then(r=>r.text())
+       .then(c=>{try{eval(c);}catch(e){alert("Error executing script:\n"+e);}})
+       .catch(e=>alert("Error loading script:\n"+e));
+   })();
+   ```
 
-6. Open any Form.io page (in **DS**, **BPA**, or the **builder**).
+6. Save the bookmark.
 
-7. Click on your new bookmark “Formio Keys Finder.”
+7. Open any Form.io page (in **DS**, **BPA**, or the **builder**).
+
+8. Click on your new bookmark “Formio Keys Finder.”
 
    🔹 A small floating window will appear, showing all **detected keys** with options to:
 
@@ -51,6 +64,7 @@ It highlights components directly on the page and lets you **copy or export** al
 ### 🧼 Optional: Cleanup Bookmarklet
 
 You can create a second bookmark to close the interface and clear highlights:
+
 
 ```javascript
 javascript:(function(){
