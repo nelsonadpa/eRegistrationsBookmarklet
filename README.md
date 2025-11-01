@@ -38,7 +38,7 @@ v1
 v2
    ```javascript
    javascript:(function(){
-     const url='https://raw.githubusercontent.com/nelsonadpa/eRegistrationsBookmarklet/main/formio-keys.js';
+     const url='https://github.com/nelsonadpa/eRegistrationsBookmarklet/blob/main/formio-keys-enhanced.js';
      fetch(url)
        .then(r=>r.text())
        .then(c=>{try{eval(c);}catch(e){alert("Error executing script:\n"+e);}})
