@@ -648,7 +648,7 @@
       <button id="__fi_clear">🧹 Limpiar</button>
     </div>
     <div class="list" id="__fi_list"></div>
-    <footer>🚀 Enhanced version • Click rows to highlight • Hover badges for info</footer>
+    <footer>🚀 Enhanced version by Nelson • Click rows to highlight • Hover badges for info</footer>
   `;
   document.body.appendChild(modal);
 
