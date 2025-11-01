@@ -1,4 +1,4 @@
-/* formio-keys.js — eRegistrations Bookmarklet (Form.io Keys Finder) Enhanced */
+/* formio-keys.js — eRegistrations Bookmarklet (Form.io Keys Finder) Enhanced with Label Column */
 (function(){
   if(window.__formioKeysFinderRunning){ try{document.getElementById('__fi_key_modal')?.remove();}catch(e){} }
   window.__formioKeysFinderRunning = Date.now();
@@ -11,7 +11,7 @@
   const styles = `
     .${HIGHLIGHT_CLASS}{box-shadow:0 0 0 3px rgba(255,200,0,.9)!important;border-radius:6px!important;position:relative;z-index:9999999!important}
     .${GO_ACTIVE_CLASS}{box-shadow:0 0 0 4px rgba(11,116,222,.9)!important;border-radius:6px!important;position:relative;z-index:10000001!important}
-    #${MODAL_ID}{position:fixed;right:18px;top:18px;width:560px;max-height:85vh;overflow:auto;background:#fff;color:#111;border:1px solid #ddd;box-shadow:0 8px 30px rgba(0,0,0,.25);z-index:10000000;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;border-radius:8px}
+    #${MODAL_ID}{position:fixed;right:18px;top:18px;width:720px;max-height:85vh;overflow:auto;background:#fff;color:#111;border:1px solid #ddd;box-shadow:0 8px 30px rgba(0,0,0,.25);z-index:10000000;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:13px;border-radius:8px}
     #${MODAL_ID} header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #eee;background:linear-gradient(to right, #f8f9fa, #fff)}
     #${MODAL_ID} .title{font-weight:600;font-size:14px}
     #${MODAL_ID} .count{color:#666;font-size:12px;margin-left:8px}
@@ -43,27 +43,56 @@
     #${MODAL_ID} .group-action:hover{background:#e8f4fd}
     #${MODAL_ID} .group-content{margin-left:20px}
     #${MODAL_ID} .group-content.collapsed{display:none}
-    #${MODAL_ID} .keyrow{display:flex;justify-content:space-between;align-items:center;padding:6px 4px;border-bottom:1px dashed #efefef;transition:background 0.2s}
+    #${MODAL_ID} .keyrow{display:grid;grid-template-columns:24px 1fr 1fr 140px;gap:8px;align-items:center;padding:8px 4px;border-bottom:1px dashed #efefef;transition:background 0.2s}
     #${MODAL_ID} .keyrow:hover{background:#f8f9fa}
     #${MODAL_ID} .keyrow.hidden{display:none}
-    #${MODAL_ID} .key-info{display:flex;align-items:center;flex:1;gap:6px}
-    #${MODAL_ID} .key-type{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:#f0f0f0;font-size:11px}
-    #${MODAL_ID} .key-type.text{background:#e3f2fd}
-    #${MODAL_ID} .key-type.number{background:#f3e5f5}
-    #${MODAL_ID} .key-type.date{background:#fff3e0}
-    #${MODAL_ID} .key-type.select{background:#e8f5e9}
-    #${MODAL_ID} .key-type.textarea{background:#fce4ec}
-    #${MODAL_ID} .key-type.checkbox{background:#f1f8e9}
-    #${MODAL_ID} .key-type.radio{background:#fff8e1}
-    #${MODAL_ID} .keyname{word-break:break-all;flex:1}
-    #${MODAL_ID} .key-badges{display:flex;gap:4px;margin-left:6px}
-    #${MODAL_ID} .badge{padding:1px 4px;border-radius:3px;font-size:10px;font-weight:600}
+    #${MODAL_ID} .key-type{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:4px;background:#f0f0f0;font-size:12px;flex-shrink:0}
+    #${MODAL_ID} .key-type.textfield{background:#e3f2fd;color:#1976d2}
+    #${MODAL_ID} .key-type.number{background:#f3e5f5;color:#7b1fa2}
+    #${MODAL_ID} .key-type.currency{background:#fff3e0;color:#f57c00}
+    #${MODAL_ID} .key-type.datetime{background:#fff3e0;color:#f57c00}
+    #${MODAL_ID} .key-type.calendar{background:#fff3e0;color:#f57c00}
+    #${MODAL_ID} .key-type.day{background:#fff8e1;color:#fbc02d}
+    #${MODAL_ID} .key-type.time{background:#fff8e1;color:#fbc02d}
+    #${MODAL_ID} .key-type.select{background:#e8f5e9;color:#388e3c}
+    #${MODAL_ID} .key-type.selectboxes{background:#e8f5e9;color:#388e3c}
+    #${MODAL_ID} .key-type.textarea{background:#fce4ec;color:#c2185b}
+    #${MODAL_ID} .key-type.checkbox{background:#f1f8e9;color:#689f38}
+    #${MODAL_ID} .key-type.radio{background:#fff8e1;color:#fbc02d}
+    #${MODAL_ID} .key-type.email{background:#e1f5fe;color:#0277bd}
+    #${MODAL_ID} .key-type.phoneNumber{background:#f3e5f5;color:#6a1b9a}
+    #${MODAL_ID} .key-type.url{background:#e1f5fe;color:#0277bd}
+    #${MODAL_ID} .key-type.password{background:#ffebee;color:#c62828}
+    #${MODAL_ID} .key-type.file{background:#e0f2f1;color:#00796b}
+    #${MODAL_ID} .key-type.signature{background:#f3e5f5;color:#8e24aa}
+    #${MODAL_ID} .key-type.address{background:#e8eaf6;color:#3f51b5}
+    #${MODAL_ID} .key-type.button{background:#e0e0e0;color:#616161}
+    #${MODAL_ID} .key-type.hidden{background:#fafafa;color:#9e9e9e}
+    #${MODAL_ID} .key-type.panel{background:#ede7f6;color:#5e35b1}
+    #${MODAL_ID} .key-type.columns{background:#e8eaf6;color:#3949ab}
+    #${MODAL_ID} .key-type.tabs{background:#e1f5fe;color:#0277bd}
+    #${MODAL_ID} .key-type.fieldset{background:#f1f8e9;color:#558b2f}
+    #${MODAL_ID} .key-type.content{background:#fff9c4;color:#f9a825}
+    #${MODAL_ID} .key-type.mycontent{background:#fff9c4;color:#f9a825}
+    #${MODAL_ID} .key-type.htmlelement{background:#fce4ec;color:#ad1457}
+    #${MODAL_ID} .key-type.editgrid{background:#e0f2f1;color:#00695c}
+    #${MODAL_ID} .key-type.datagrid{background:#e0f2f1;color:#00695c}
+    #${MODAL_ID} .key-type.resource{background:#ede7f6;color:#6a1b9a}
+    #${MODAL_ID} .key-type.form{background:#e8eaf6;color:#283593}
+    #${MODAL_ID} .key-type.nestedform{background:#e8eaf6;color:#283593}
+    #${MODAL_ID} .key-column{display:flex;flex-direction:column;min-width:0}
+    #${MODAL_ID} .keyname{font-weight:500;font-size:12px;color:#111;word-break:break-all;overflow:hidden;text-overflow:ellipsis}
+    #${MODAL_ID} .key-badges{display:flex;gap:4px;margin-top:2px;flex-wrap:wrap}
+    #${MODAL_ID} .badge{padding:1px 5px;border-radius:3px;font-size:10px;font-weight:600;white-space:nowrap}
     #${MODAL_ID} .badge.required{background:#fee;color:#c00}
     #${MODAL_ID} .badge.disabled{background:#f0f0f0;color:#666}
     #${MODAL_ID} .badge.filled{background:#efe;color:#080}
     #${MODAL_ID} .badge.dependent{background:#e8f4fd;color:#0b74de}
-    #${MODAL_ID} .actions{display:flex;align-items:center}
-    #${MODAL_ID} .actionlink{margin-left:8px;color:#0b74de;cursor:pointer;font-size:11px;user-select:none;padding:2px 4px;border-radius:3px}
+    #${MODAL_ID} .label-column{display:flex;flex-direction:column;min-width:0}
+    #${MODAL_ID} .field-label{font-size:12px;color:#333;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    #${MODAL_ID} .field-type-text{font-size:10px;color:#888;margin-top:2px}
+    #${MODAL_ID} .actions{display:flex;align-items:center;gap:6px;justify-content:flex-end}
+    #${MODAL_ID} .actionlink{color:#0b74de;cursor:pointer;font-size:11px;user-select:none;padding:3px 6px;border-radius:3px;white-space:nowrap}
     #${MODAL_ID} .actionlink:hover{background:#e8f4fd}
     #${MODAL_ID} .dependency-info{position:absolute;z-index:10000002;background:#333;color:#fff;padding:6px 10px;border-radius:6px;font-size:11px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.2s}
     #${MODAL_ID} .dependency-info.show{opacity:1}
@@ -73,6 +102,7 @@
     #${MODAL_ID} .view-toggle{display:flex;gap:4px;margin-left:auto}
     #${MODAL_ID} .view-btn{padding:4px 8px;border-radius:4px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:11px}
     #${MODAL_ID} .view-btn.active{background:#0b74de;color:#fff;border-color:#0b74de}
+    #${MODAL_ID} .foundcount{margin-left:0!important;color:#666!important;font-size:10px!important}
   `;
   const styleTag = document.createElement('style');
   styleTag.id = '__fi_style_inject';
@@ -82,47 +112,224 @@
   // ---------- Enhanced Helpers ----------
   const s = v => (v||'').toString().trim();
 
-  // Type detection icons
+  // Type detection icons (Form.io components)
   const TYPE_ICONS = {
-    text: '📝',
+    // Estructura y Layout
+    panel: '🎴',
+    columns: '📐',
+    tabs: '📑',
+    fieldset: '🗂️',
+    // Básicos
+    textfield: '📝',
     number: '🔢',
-    date: '📅',
-    email: '📧',
-    tel: '☎️',
-    select: '📋',
+    currency: '💰',
     textarea: '📄',
     checkbox: '☑️',
     radio: '⭕',
-    file: '📎',
-    hidden: '👁️',
+    select: '📋',
+    selectboxes: '☑️',
     password: '🔒',
+    button: '🔘',
+    // Especializados
+    email: '📧',
+    url: '🔗',
+    phoneNumber: '☎️',
+    datetime: '📅',
+    calendar: '📅',
+    day: '📆',
+    time: '⏰',
+    file: '📎',
+    signature: '✍️',
+    address: '📍',
+    // Datos y Display
+    content: '📰',
+    mycontent: '📰',
+    htmlelement: '🌐',
+    editgrid: '📊',
+    datagrid: '📋',
+    hidden: '👁️',
+    resource: '🗄️',
+    form: '📋',
+    nestedform: '📋',
+    // Fallbacks HTML
+    text: '📝',
+    date: '📅',
+    tel: '☎️',
     color: '🎨',
     range: '📊',
     unknown: '❓'
   };
 
-  // Detect field type
+  // Type display names in Spanish
+  const TYPE_NAMES = {
+    // Estructura y Layout
+    panel: 'Panel',
+    columns: 'Columnas',
+    tabs: 'Pestañas',
+    fieldset: 'Fieldset',
+    // Básicos
+    textfield: 'Campo de texto',
+    number: 'Número',
+    currency: 'Moneda',
+    textarea: 'Área de texto',
+    checkbox: 'Casilla',
+    radio: 'Radio',
+    select: 'Selección',
+    selectboxes: 'Casillas múltiples',
+    password: 'Contraseña',
+    button: 'Botón',
+    // Especializados
+    email: 'Email',
+    url: 'URL',
+    phoneNumber: 'Teléfono',
+    datetime: 'Fecha y hora',
+    calendar: 'Calendario',
+    day: 'Día',
+    time: 'Hora',
+    file: 'Archivo',
+    signature: 'Firma',
+    address: 'Dirección',
+    // Datos y Display
+    content: 'Contenido',
+    mycontent: 'Mi contenido',
+    htmlelement: 'Elemento HTML',
+    editgrid: 'Grilla editable',
+    datagrid: 'Grilla de datos',
+    hidden: 'Oculto',
+    resource: 'Recurso',
+    form: 'Formulario',
+    nestedform: 'Formulario anidado',
+    // Fallbacks HTML
+    text: 'Texto',
+    date: 'Fecha',
+    tel: 'Teléfono',
+    color: 'Color',
+    range: 'Rango',
+    unknown: 'Desconocido'
+  };
+
+  // Get field label
+  function getFieldLabel(elements) {
+    if (!elements || elements.length === 0) return '';
+    
+    const el = elements[0];
+    
+    // Try multiple strategies to find the label
+    
+    // 1. Direct label element
+    const labelFor = el.id ? document.querySelector(`label[for="${el.id}"]`) : null;
+    if (labelFor) return labelFor.textContent.trim().replace(/\s*\*\s*$/, '');
+    
+    // 2. Parent label
+    const parentLabel = el.closest('label');
+    if (parentLabel) {
+      const clone = parentLabel.cloneNode(true);
+      // Remove the input/select/textarea from clone to get only label text
+      clone.querySelectorAll('input, select, textarea').forEach(inp => inp.remove());
+      return clone.textContent.trim().replace(/\s*\*\s*$/, '');
+    }
+    
+    // 3. Sibling label
+    let sibling = el.previousElementSibling;
+    while (sibling) {
+      if (sibling.tagName === 'LABEL') {
+        return sibling.textContent.trim().replace(/\s*\*\s*$/, '');
+      }
+      sibling = sibling.previousElementSibling;
+    }
+    
+    // 4. Form.io specific: .formio-component-label
+    const labelEl = el.querySelector('.formio-component-label, .control-label, .field-label, .form-label');
+    if (labelEl) return labelEl.textContent.trim().replace(/\s*\*\s*$/, '');
+    
+    // 5. Look for label in parent component
+    const componentParent = el.closest('.formio-component, .form-group, .field-wrapper');
+    if (componentParent) {
+      const compLabel = componentParent.querySelector('.formio-component-label, .control-label, .field-label, .form-label');
+      if (compLabel) return compLabel.textContent.trim().replace(/\s*\*\s*$/, '');
+    }
+    
+    // 6. aria-label attribute
+    if (el.getAttribute('aria-label')) {
+      return el.getAttribute('aria-label').trim();
+    }
+    
+    // 7. title attribute
+    if (el.getAttribute('title')) {
+      return el.getAttribute('title').trim();
+    }
+    
+    // 8. placeholder as fallback
+    if (el.getAttribute('placeholder')) {
+      return el.getAttribute('placeholder').trim();
+    }
+    
+    return '';
+  }
+
+  // Detect field type from Form.io components
   function detectFieldType(elements) {
     if (!elements || elements.length === 0) return 'unknown';
     
     const el = elements[0];
+    
+    // Priority 1: Check Form.io component classes (most reliable)
+    const classes = el.className || '';
+    
+    // List of all Form.io component types in priority order
+    const formioTypes = [
+      // Estructura y Layout
+      'panel', 'columns', 'tabs', 'fieldset',
+      // Especializados (check before basic types)
+      'email', 'url', 'phoneNumber', 'datetime', 'calendar', 'day', 'time',
+      'file', 'signature', 'address',
+      // Básicos
+      'textfield', 'number', 'currency', 'textarea', 
+      'checkbox', 'radio', 'select', 'selectboxes', 'password', 'button',
+      // Datos y Display
+      'content', 'mycontent', 'htmlelement', 'editgrid', 'datagrid', 
+      'hidden', 'resource', 'form', 'nestedform'
+    ];
+    
+    // Check for formio-component-{type} pattern
+    for (const type of formioTypes) {
+      if (classes.includes(`formio-component-${type}`)) {
+        return type;
+      }
+    }
+    
+    // Priority 2: Check HTML tag types
     const tagName = el.tagName?.toLowerCase();
     
     if (tagName === 'select') return 'select';
     if (tagName === 'textarea') return 'textarea';
+    if (tagName === 'button') return 'button';
+    
     if (tagName === 'input') {
       const type = el.type?.toLowerCase() || 'text';
-      return TYPE_ICONS[type] ? type : 'text';
+      // Map HTML input types to our type system
+      if (type === 'text') return 'textfield';
+      if (type === 'email') return 'email';
+      if (type === 'tel') return 'phoneNumber';
+      if (type === 'number') return 'number';
+      if (type === 'date' || type === 'datetime-local') return 'datetime';
+      if (type === 'time') return 'time';
+      if (type === 'checkbox') return 'checkbox';
+      if (type === 'radio') return 'radio';
+      if (type === 'password') return 'password';
+      if (type === 'file') return 'file';
+      if (type === 'hidden') return 'hidden';
+      if (type === 'color') return 'color';
+      if (type === 'range') return 'range';
+      if (type === 'url') return 'url';
+      return type;
     }
     
-    // Check for Form.io specific classes
-    const classes = el.className || '';
-    if (classes.includes('formio-component-select')) return 'select';
-    if (classes.includes('formio-component-textarea')) return 'textarea';
-    if (classes.includes('formio-component-number')) return 'number';
-    if (classes.includes('formio-component-datetime')) return 'date';
-    if (classes.includes('formio-component-checkbox')) return 'checkbox';
-    if (classes.includes('formio-component-radio')) return 'radio';
+    // Priority 3: Check for input elements inside component
+    const innerInput = el.querySelector('input, select, textarea, button');
+    if (innerInput) {
+      return detectFieldType([innerInput]);
+    }
     
     return 'unknown';
   }
@@ -134,6 +341,7 @@
     const el = elements[0];
     const metadata = {
       type: detectFieldType(elements),
+      label: getFieldLabel(elements),
       required: false,
       disabled: false,
       readonly: false,
@@ -384,7 +592,7 @@
   modal.id = MODAL_ID;
   modal.innerHTML = `
     <header>
-      <div><span class="title">🔍 Form.io Keys Finder Enhanced</span> <span class="count"></span></div>
+      <div><span class="title">🔍 eRegistrations Key Analyzer</span> <span class="count"></span></div>
       <div class="view-toggle">
         <button class="view-btn active" data-view="list">📝 Lista</button>
         <button class="view-btn" data-view="grouped">🗂️ Agrupado</button>
@@ -394,12 +602,14 @@
     </header>
     <div class="filter-bar" id="__fi_filters">
       <button class="filter-btn active" data-filter="all">🔘 Todos <span class="count"></span></button>
-      <button class="filter-btn" data-filter="text">📝 Text <span class="count"></span></button>
+      <button class="filter-btn" data-filter="textfield">📝 Text <span class="count"></span></button>
       <button class="filter-btn" data-filter="number">🔢 Number <span class="count"></span></button>
       <button class="filter-btn" data-filter="select">📋 Select <span class="count"></span></button>
       <button class="filter-btn" data-filter="textarea">📄 Textarea <span class="count"></span></button>
-      <button class="filter-btn" data-filter="date">📅 Date <span class="count"></span></button>
+      <button class="filter-btn" data-filter="datetime">📅 Fecha <span class="count"></span></button>
       <button class="filter-btn" data-filter="checkbox">☑️ Check <span class="count"></span></button>
+      <button class="filter-btn" data-filter="email">📧 Email <span class="count"></span></button>
+      <button class="filter-btn" data-filter="panel">🎴 Panel <span class="count"></span></button>
       <button class="filter-btn" data-filter="required">⚠️ Required <span class="count"></span></button>
       <button class="filter-btn" data-filter="filled">✅ Filled <span class="count"></span></button>
       <button class="filter-btn" data-filter="empty">⭕ Empty <span class="count"></span></button>
@@ -431,7 +641,7 @@
       </div>
     </div>
     <div class="controls">
-      <input id="__fi_search" type="search" placeholder="🔍 Buscar key…">
+      <input id="__fi_search" type="search" placeholder="🔍 Buscar key o nombre…">
       <button id="__fi_copy" class="primary">📋 Copiar</button>
       <button id="__fi_export_full">📊 Export Full</button>
       <button id="__fi_select_all">✨ Resaltar todos</button>
@@ -469,8 +679,14 @@
   function updateFilterCounts() {
     const counts = {
       all: keysData.length,
-      text: 0, number: 0, select: 0, textarea: 0, date: 0,
-      checkbox: 0, radio: 0, required: 0, filled: 0, empty: 0
+      textfield: 0, number: 0, currency: 0, select: 0, selectboxes: 0, 
+      textarea: 0, datetime: 0, calendar: 0, day: 0, time: 0,
+      checkbox: 0, radio: 0, email: 0, phoneNumber: 0, url: 0,
+      password: 0, file: 0, signature: 0, address: 0, button: 0,
+      panel: 0, columns: 0, tabs: 0, fieldset: 0,
+      content: 0, mycontent: 0, htmlelement: 0, editgrid: 0, datagrid: 0,
+      hidden: 0, resource: 0, form: 0, nestedform: 0,
+      required: 0, filled: 0, empty: 0
     };
     
     keysData.forEach(data => {
@@ -525,28 +741,29 @@
     return false;
   }
 
-  // Build enhanced row
+  // Build enhanced row with label column
   function buildEnhancedRow(data){
     const row = document.createElement('div'); 
     row.className = 'keyrow';
     row.dataset.key = data.key;
     row.dataset.type = data.type;
-    
-    const keyInfo = document.createElement('div');
-    keyInfo.className = 'key-info';
+    row.dataset.label = data.label || '';
     
     // Type icon
     const typeIcon = document.createElement('span');
     typeIcon.className = `key-type ${data.type}`;
     typeIcon.textContent = TYPE_ICONS[data.type] || '❓';
-    typeIcon.title = `Tipo: ${data.type}`;
+    typeIcon.title = `Tipo: ${TYPE_NAMES[data.type] || data.type}`;
     
-    // Key name
-    const name = document.createElement('div');
-    name.className = 'keyname';
-    name.textContent = data.key;
+    // Key column
+    const keyColumn = document.createElement('div');
+    keyColumn.className = 'key-column';
     
-    // Badges
+    const keyName = document.createElement('div');
+    keyName.className = 'keyname';
+    keyName.textContent = data.key;
+    keyName.title = data.key;
+    
     const badges = document.createElement('div');
     badges.className = 'key-badges';
     
@@ -590,22 +807,38 @@
       badges.appendChild(dep);
     }
     
-    keyInfo.appendChild(typeIcon);
-    keyInfo.appendChild(name);
-    keyInfo.appendChild(badges);
+    keyColumn.appendChild(keyName);
+    keyColumn.appendChild(badges);
+    
+    // Label column (NEW!)
+    const labelColumn = document.createElement('div');
+    labelColumn.className = 'label-column';
+    
+    const fieldLabel = document.createElement('div');
+    fieldLabel.className = 'field-label';
+    fieldLabel.textContent = data.label || '(sin etiqueta)';
+    fieldLabel.title = data.label || '';
+    if (!data.label) fieldLabel.style.color = '#999';
+    
+    const fieldTypeText = document.createElement('div');
+    fieldTypeText.className = 'field-type-text';
+    fieldTypeText.textContent = TYPE_NAMES[data.type] || data.type;
+    
+    labelColumn.appendChild(fieldLabel);
+    labelColumn.appendChild(fieldTypeText);
     
     // Actions
     const actions = document.createElement('div');
     actions.className = 'actions';
 
-    // Enhanced Go button
+    if(!cycles.has(data.key)) cycles.set(data.key, {idx:0});
+
+    // Go button
     const goBtn = document.createElement('span');
     goBtn.className = 'actionlink __go';
     goBtn.textContent = 'Ir';
     goBtn.title = 'Navegar al campo';
     
-    if(!cycles.has(data.key)) cycles.set(data.key, {idx:0});
-
     goBtn.addEventListener('click', (e)=>{
       e.stopPropagation();
       const els = data.elements;
@@ -636,34 +869,13 @@
       st.idx++;
 
       // Show field info
-      const metadata = getFieldMetadata(els);
-      actions.querySelector('.foundcount')?.remove();
+      actions.querySelectorAll('.foundcount').forEach(fc => fc.remove());
       const fc = document.createElement('span');
       fc.className='foundcount';
-      fc.style.marginLeft='8px';
-      fc.style.color='#666';
-      fc.style.fontSize='10px';
       
       let info = `(${((st.idx-1)%els.length)+1}/${els.length})`;
-      if (metadata.value) {
-        info += ` [${metadata.value.substring(0, 20)}${metadata.value.length > 20 ? '...' : ''}]`;
-      }
       fc.textContent = info;
-      actions.appendChild(fc);
-    });
-
-    // Highlight button
-    const showBtn = document.createElement('span');
-    showBtn.className = 'actionlink';
-    showBtn.textContent = 'Resaltar';
-    showBtn.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      const els = data.elements;
-      if(els.length===0){ 
-        alert('No se encontraron elementos para: ' + data.key); 
-        return; 
-      }
-      els.forEach(el=>highlightElement(el, data.key));
+      goBtn.appendChild(fc);
     });
 
     // Copy button
@@ -674,7 +886,6 @@
       e.stopPropagation();
       navigator.clipboard?.writeText(data.key);
       
-      // Visual feedback
       copyBtn.textContent = '✓';
       copyBtn.style.color = '#0a0';
       setTimeout(() => {
@@ -684,10 +895,11 @@
     });
 
     actions.appendChild(goBtn);
-    actions.appendChild(showBtn);
     actions.appendChild(copyBtn);
     
-    row.appendChild(keyInfo);
+    row.appendChild(typeIcon);
+    row.appendChild(keyColumn);
+    row.appendChild(labelColumn);
     row.appendChild(actions);
 
     // Click on row -> highlight + scroll to first
@@ -804,9 +1016,10 @@
     let visible = 0;
     
     listEl.querySelectorAll('.keyrow').forEach(row=>{
-      const key = row.dataset.key;
-      const matchesSearch = !q || key.toLowerCase().includes(q);
-      const matchesFilter = passesFilters(keysData.find(d => d.key === key));
+      const key = row.dataset.key.toLowerCase();
+      const label = row.dataset.label.toLowerCase();
+      const matchesSearch = !q || key.includes(q) || label.includes(q);
+      const matchesFilter = passesFilters(keysData.find(d => d.key === row.dataset.key));
       const show = matchesSearch && matchesFilter;
       
       row.style.display = show ? '' : 'none';
@@ -866,18 +1079,21 @@
   modal.querySelector('#__fi_export_full').addEventListener('click', ()=>{
     const exportData = keysData.map(d => ({
       key: d.key,
+      label: d.label || '',
       type: d.type,
+      typeName: TYPE_NAMES[d.type] || d.type,
       required: d.required,
       disabled: d.disabled,
       filled: d.filled,
       value: d.value,
+      placeholder: d.placeholder,
       elementCount: d.elementCount,
       dependsOn: d.dependencies.dependsOn.join(','),
       enables: d.dependencies.enables.join(',')
     }));
     
     // Create CSV
-    const headers = ['key', 'type', 'required', 'disabled', 'filled', 'value', 'elementCount', 'dependsOn', 'enables'];
+    const headers = ['key', 'label', 'type', 'typeName', 'required', 'disabled', 'filled', 'value', 'placeholder', 'elementCount', 'dependsOn', 'enables'];
     const csv = [
       headers.join(','),
       ...exportData.map(row => 
@@ -895,12 +1111,10 @@
     const filter = e.target.getAttribute('data-filter');
     
     if (filter === 'all') {
-      // Clear all and set only 'all'
       filterBar.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
       e.target.classList.add('active');
       activeFilters = new Set(['all']);
     } else {
-      // Toggle specific filter
       filterBar.querySelector('[data-filter="all"]').classList.remove('active');
       activeFilters.delete('all');
       
@@ -912,7 +1126,6 @@
         e.target.classList.add('active');
       }
       
-      // If no filters, activate 'all'
       if (activeFilters.size === 0) {
         activeFilters.add('all');
         filterBar.querySelector('[data-filter="all"]').classList.add('active');
@@ -931,7 +1144,6 @@
       const view = btn.getAttribute('data-view');
       currentView = view;
       
-      // Show/hide panels
       statsPanel.classList.toggle('show', view === 'stats');
       listEl.style.display = view === 'stats' ? 'none' : 'block';
       
