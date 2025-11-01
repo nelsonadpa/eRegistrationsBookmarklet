@@ -1,15 +1,11 @@
-Perfect — here’s the **English version** you can paste directly into your `README.md` on GitHub (already formatted for Markdown and clear for developers and non-developers alike):
+## eRegistrations Bookmarklet — Form.io Keys Finder
 
----
-
-## 🧩 eRegistrations Bookmarklet — Form.io Keys Finder
-
-This bookmarklet helps you **identify all component keys** in a Form.io form (BPA or DS instance).
+This bookmarklet helps you **identify all component keys** in a a service in eRegistrations based on the DOM form (BPA or DS instance).
 It highlights components directly on the page and lets you **copy or export** all keys (CSV / JSON).
 
 ---
 
-### 🚀 How to Use
+### How to Use
 
 1. Open your browser (Chrome, Edge, Firefox).
 
@@ -78,8 +74,5 @@ javascript:(function(){
 ### 📂 Repository
 
 Source code and updates available at:
-🔗 [https://github.com/nelsonadpa/eRegistrationsBookmarklet](https://github.com/nelsonadpa/eRegistrationsBookmarklet)
+🔗 [https://github.com/nelsonadpa/eRegistrationsBookmarklet](https://github.com/nelsonadpa/eRegistrationsBookmarklet) https://claude.ai/chat/e6a48b68-93cb-4af7-93b1-471e4aea80df
 
----
-
-Would you like me to make it even more **developer-friendly** (for example, adding a “Quick Demo GIF” placeholder and sections for “Contributing” and “License”)?
